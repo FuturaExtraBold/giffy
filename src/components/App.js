@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import axios from "axios";
 
+import GifList from "./GifList";
+import SearchForm from "./SearchForm";
+
 class App extends Component {
 
   constructor() {
@@ -12,7 +15,11 @@ class App extends Component {
 
   componentDidMount() {
     console.log("App componentDidMount");
-    axios.get("http://api.giphy.com/v1/gifs/trending?api_key=dc6zaTOxFJmzC")
+
+  }
+
+  performSearch = (query) => {
+    axios.get(`http://api.giphy.com/v1/gifs/search?q=${ query }&api_key=dc6zaTOxFJmzC`)
       .then(response => {
         this.setState({
           gifs: response.data.data
@@ -26,7 +33,14 @@ class App extends Component {
   render() {
     console.log("state.gifs:", this.state.gifs);
     return (
-      <h1>Hello, world!</h1>
+      <div className="app">
+        <section className="search">
+          <SearchForm onSearch={ this.performSearch } />
+        </section>
+        <section className="results">
+          <GifList data={ this.state.gifs } />
+        </section>
+      </div>
     );
   }
 }
